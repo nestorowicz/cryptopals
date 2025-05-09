@@ -31,12 +31,20 @@ def score_english(input_bytes):
         result += abs(letter_frequency_en[char] - freq)
     for byte in histogram:
         if byte not in letter_frequency_en and byte not in [ord("'"), ord(" ")]:
-            result += 10
+            result += 100
     return result
-
 
 def bruteforce_singlebyte_xor(input_bytes):
     xored = [ xor_by_key(input_bytes, byte) for byte in range(0, 256) ]
     scored = [ (text, score_english(text)) for text in xored ]
     scored_sorted = sorted(scored, key=lambda x: x[1])
     return scored_sorted[0]
+
+def calculate_edit_distance(a, b):
+    if len(a) != len(b):
+        print(len(a))
+        print(len(b))
+        raise ValueError('bytearrays must be the same length')
+    return sum([bin(byte1 ^ byte2).count('1') for byte1, byte2 in zip(a, b)])
+
+assert calculate_edit_distance(b'this is a test', b'wokka wokka!!!') == 37
